@@ -223,6 +223,20 @@ select * from test where value % 3 = 0; -- T1. Returns nothing
 commit; -- T1
 ```
 
+Postgres "repeatable read" prevents Read Skew (G-single) -- test using write predicate:
+
+```sql
+begin; set transaction isolation level repeatable read; -- T1
+begin; set transaction isolation level repeatable read; -- T2
+select * from test where id = 1; -- T1. Shows 1 => 10
+select * from test; -- T2
+update test set value = 12 where id = 1; -- T2
+update test set value = 18 where id = 2; -- T2
+commit; -- T2
+delete from test where value = 20; -- T1. Prints "ERROR: could not serialize access due to concurrent update"
+abort; -- T1. There's nothing else we can do, this transaction has failed
+```
+
 
 Write Skew (G2-item)
 --------------------
