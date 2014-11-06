@@ -314,49 +314,67 @@ rollback; -- T1
 ```
 
 
-Practical notes
----------------
+Testing Oracle on AWS
+---------------------
 
 If you want to run these tests and don't happen to have an Oracle license lying around, you can
-bring up an Oracle instance on Amazon RDS:
+bring up an Oracle instance on Amazon RDS.
 
-1. On the [RDS web console](https://us-west-2.console.aws.amazon.com/rds/home?region=us-west-2),
-   launch an oracle-se1 instance. ([Instructions](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.Oracle.html))
-   * Say no to provisioned IOPS and multi-AZ. 
-   * License model: license-included
-   * Instance class: db.m1.small
-   * Instance identifier: oracletest
-   * Master username: oracletest
-   * Password: oracletest
-   * Database name: ORCL
-   * Database port: 1521
-   * You may need to allow access to incoming port 1521 in the security group settings.
-2. When RDS has launched the instance (which takes a while), you should get an endpoint. Note the hostname, which
-   looks something like `oracletest.a1b2c4d5e5f6.us-west-2.rds.amazonaws.com`.
-3. Download [Instant Client](http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html) for Linux.
-   ([Instructions](http://docs.oracle.com/cd/B19306_01/server.102/b14357/ape.htm))
-   You need to get the same version of the client as you launched (e.g. 11.2.0.4).
-   You need two packages: "Instant Client Package - Basic" and "Instant Client Package - SQL*Plus".
-   Get the zip version (not the rpm version). The files should be called something like
-   `instantclient-basic-linux.x64-11.2.0.4.0.zip` and `instantclient-sqlplus-linux.x64-11.2.0.4.0.zip`.
-4. In the same directory as the instantclient zip files, create a file `Dockerfile` with contents:
-   ```
-   FROM ubuntu:14.04
-   RUN apt-get update && apt-get install -y unzip libaio1
-   RUN mkdir /oracle
-   COPY instantclient-*.zip /oracle/
-   COPY oracletest /oracle/
-   RUN cd /oracle && unzip instantclient-basic-*.zip && unzip instantclient-sqlplus-*.zip
-   ```
-5. In that same directory, create a file `oracletest` with chmod 755 and contents:
-   ```bash
-   #!/bin/bash
-   cd /oracle/instantclient_11_2
-   LD_LIBRARY_PATH=/oracle/instantclient_11_2:${LD_LIBRARY_PATH} \
-      ./sqlplus "oracletest@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=$1)(PORT=1521))(CONNECT_DATA=(SID=ORCL)))"
-   ```
-6. Install [Docker](https://www.docker.com/) if you don't already have it, cd to that directory and do
-   `docker build -t=oracletest .`
-7. To connect to the database, run this (substituting your own instance hostname)
-   `docker run -t -i oracletest /oracle/oracletest oracletest.a1b2c4d5e5f6.us-west-2.rds.amazonaws.com`
-   and when prompted, enter the password `oracletest`.
+On the [RDS web console](https://us-west-2.console.aws.amazon.com/rds/home?region=us-west-2),
+launch an oracle-se1 instance with the following settings:
+([Instructions](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.Oracle.html))
+
+* Say no to provisioned IOPS and multi-AZ. 
+* License model: license-included
+* Instance class: db.m1.small
+* Instance identifier: oracletest
+* Master username: oracletest
+* Password: oracletest
+* Database name: ORCL
+* Database port: 1521
+* You may need to allow access to incoming port 1521 in the security group settings.
+
+When RDS has launched the instance (which takes a while), you should get an endpoint. Note the hostname, which
+looks something like `oracletest.a1b2c4d5e5f6.us-west-2.rds.amazonaws.com`.
+
+Download [Instant Client](http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html) for Linux.
+([Instructions](http://docs.oracle.com/cd/B19306_01/server.102/b14357/ape.htm))
+You need to get the same version of the client as you launched (e.g. 11.2.0.4).
+You need two packages: "Instant Client Package - Basic" and "Instant Client Package - SQL*Plus".
+Get the zip version (not the rpm version). The files should be called something like
+`instantclient-basic-linux.x64-11.2.0.4.0.zip` and `instantclient-sqlplus-linux.x64-11.2.0.4.0.zip`.
+Put them in a directory of your choice.
+
+In the same directory as the instantclient zip files, create a file `Dockerfile` with contents:
+
+```
+FROM ubuntu:14.04
+RUN apt-get update && apt-get install -y unzip libaio1
+RUN mkdir /oracle
+COPY instantclient-*.zip /oracle/
+COPY oracletest /oracle/
+RUN cd /oracle && unzip instantclient-basic-*.zip && unzip instantclient-sqlplus-*.zip
+```
+
+In that same directory, create a file `oracletest` with chmod 755 and contents:
+
+```bash
+#!/bin/bash
+cd /oracle/instantclient_11_2
+LD_LIBRARY_PATH=/oracle/instantclient_11_2:${LD_LIBRARY_PATH} \
+  ./sqlplus "oracletest@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=$1)(PORT=1521))(CONNECT_DATA=(SID=ORCL)))"
+```
+
+Install [Docker](https://www.docker.com/) if you don't already have it, cd to that directory and do:
+
+```bash
+docker build -t=oracletest .
+```
+
+To connect to the database, run this (substituting your own instance hostname):
+
+```bash
+docker run -t -i oracletest /oracle/oracletest oracletest.a1b2c4d5e5f6.us-west-2.rds.amazonaws.com
+```
+
+When prompted, enter the password `oracletest`.
