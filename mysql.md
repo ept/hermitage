@@ -203,6 +203,18 @@ select * from test; -- T2. Returns 2 => 20, despite rows with value 20 ostensibl
 commit; -- T2
 ```
 
+MySQL "serializable" prevents Predicate-Many-Preceders (PMP) for write predicates -- example from Postgres documentation:
+
+```sql
+set session transaction isolation level serializable; begin; -- T1
+set session transaction isolation level serializable; begin; -- T2
+select * from test where value = 20; -- T2, returns 2 => 20
+update test set value = value + 10; -- T1, BLOCKS
+delete from test where value = 20; -- T2, causes T1 to print "ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction"
+rollback; -- T1
+commit; -- T2
+```
+
 
 Lost Update (P4)
 ----------------
