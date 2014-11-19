@@ -1,7 +1,7 @@
-Transaction isolation level test suite
-======================================
+Hermitage: Testing transaction isolation levels
+===============================================
 
-[This git repository](https://github.com/ept/isolation) is an attempt to nail down precisely what
+[Hermitage](https://github.com/ept/hermitage) is an attempt to nail down precisely what
 different database systems actually mean with their isolation levels. It's a suite of tests that
 simulates various concurrency issues — some common, some more obscure — and documents how different
 databases handle those situations.
@@ -74,7 +74,7 @@ cannot know whether your code has concurrency bugs and race conditions.
 
 The [SQL standard](http://synthesis.ipi.ac.ru/synthesis/student/oodb/essayRef/sqlFoundation) tried
 to define four isolation levels (read uncommitted, read committed, repeatable read and serializable),
-but its definition is [flawed](http://research.microsoft.com/pubs/69541/tr-95-51.pdf). Several academic
+but its definition is [flawed](http://research.microsoft.com/pubs/69541/tr-95-51.pdf). Several
 researchers have tried to nail down more precise definitions of weak (i.e. non-serializable) isolation
 levels. In particular:
 
