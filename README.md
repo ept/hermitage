@@ -126,9 +126,38 @@ They are based on the definitions in the literature above. This is useful for se
   the stronger its guarantees.
 * For anyone who needs help choosing the right isolation level for their application, the test
   suites provide concrete examples of the differences between isolation levels.
+* Various new databases have [claimed](https://foundationdb.com/acid-claims) to support
+  ACID transactions, but their marketing materials often don't make clear what guarantees are
+  actually provided. This test suite can allow a fair comparison of different databases, at least
+  on the isolation aspect of ACID.
 * Hopefully, this effort can be part of a journey towards a better understanding of weak
   isolation. It looks like weak isolation isn't going away, so we need to learn to be more
-  precise about what it means, otherwise we'll just continue creating buggy applications.
+  precise about what it means, and build tools to help us deal with it, otherwise we'll just
+  continue creating buggy applications.
+
+
+
+Caveats
+-------
+
+* This is a test suite. It obviously cannot prove that a database always behaves in a certain way,
+  it can only probe certain examples and observe what happens.
+* Tests are currently executed by hand. This means that any concurrency issues that depend on fast
+  timings will not be found. However, it's remarkable that even at the slow speed of a human, you
+  can still easily demonstrate concurrency issues. It's not the speed that matters, it's the
+  ordering of events.
+* The summary table above only describes safety properties, i.e. whether the database allows a
+  certain race condition to occur. It doesn't describe how the anomaly is prevented (usually by
+  blocking or aborting some of the transactions). In practice, how much transactions need to be
+  blocked or aborted makes a big performance difference. For example, although PostgreSQL's
+  serializable and MySQL's serializable have the same isolation guarantees, they have
+  [totally different implementations](http://drkp.net/papers/ssi-vldb12.pdf) and very different
+  performance characteristics.
+* We're not trying to compare performance here. Performance depends on the workload, so please
+  do your own benchmarking.
+* More check marks doesn't necessarily mean better. This is not
+  [Top Trumps](http://en.wikipedia.org/wiki/Top_Trumps), it's a game of trade-offs. All we're
+  trying to do here is to understand what we gain and what we lose at different isolation levels.
 
 
 Using this project
@@ -141,13 +170,17 @@ what the expected result is.
 
 This could probably be automated, but it's actually quite interesting to go through the
 exercise of stepping through transactions one line at a time, and watching how the
-database responds.
+database responds. If you want to build an intuition for database concurrency, running
+through the test suite is a good exercise. For some databases, setup instructions are
+included at the bottom of the file.
 
 At the moment, this project only compares four databases, but many more databases offer
 transactions. It would be especially interesting to add the new generation of distributed
 transactional databases ("NewSQL" if you like marketing-speak) to this comparison:
-FoundationDB, Aerospike, NuoDB, MemSQL, etc. If you want to port the test suite to one
-of those databases, or add new tests, your contribution would be most welcome!
+FoundationDB, Aerospike, NuoDB, MemSQL, etc.
+
+If you would like to port the test suite to another database, or add new tests, your
+contribution would be most welcome!
  
 
 License
