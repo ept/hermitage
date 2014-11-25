@@ -42,6 +42,7 @@ cause application bugs. The precise definitions of these anomalies are given in 
 |               | "repeatable read"            | repeatable read        | ✓  | ✓   | ✓   | ✓   | ✓   | —   | ✓  | some     | ✓       | —    |
 |               | "snapshot"                   | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
+|               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | FDB SQL Layer | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 
 Legend:
@@ -117,7 +118,7 @@ it's also frustratingly vague:
 * [MySQL/InnoDB](http://dev.mysql.com/doc/refman/5.7/en/set-transaction.html)
 * [Oracle](https://docs.oracle.com/cd/B28359_01/server.111/b28318/consist.htm)
 * [SQL Server](http://msdn.microsoft.com/en-us/library/ms173763.aspx)
-
+* [FoundationDB](https://foundationdb.com/key-value-store/documentation/developer-guide.html#transactions-in-foundationdb)
 
 Goals of this project
 ---------------------
