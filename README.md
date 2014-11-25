@@ -9,7 +9,9 @@ databases handle those situations.
 This project was started by [Martin Kleppmann](http://martin.kleppmann.com/) as background research
 for his book, [Designing Data-Intensive Applications](http://dataintensive.net/). In this repository
 you'll find a lot of nitty-gritty detail. For a gentle, friendly introduction to the topic, please
-read the book.
+read the book. There is also a
+[blog post](http://martin.kleppmann.com/2014/11/25/hermitage-testing-the-i-in-acid.html)
+with some background story.
 
 
 Summary of test results
