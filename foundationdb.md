@@ -21,7 +21,7 @@ fi
 
 tmux kill-session -t SQL || true
 tmux new-session -d -n SQL -s SQL "fdbsqlcli test | tee /tmp/SQL0.out"
-tmux split-window -t SQL "fdbsqlcli test | tee /tmp/SQL1.out"
+tmux split-window -h -t SQL "fdbsqlcli test | tee /tmp/SQL1.out"
 
 count_prompts()
 {
@@ -105,6 +105,23 @@ case $test in
     ;;
   "otv")
     echo "Running otv test."
+    tmux split-window -h -t SQL "fdbsqlcli test | tee /tmp/SQL2.out"
+    wait_for_prompts 2 0
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 2 "begin"
+    tell 0 "update test set value = 11 where id = 1"
+    tell 0 "update test set value = 19 where id = 2"
+    tell 1 "update test set value = 12 where id = 1"
+    tell 0 "commit"
+    #Shows 1 => 11, 2 => 19. This is because we don't get a snapshot of the db until our first read.
+    tell 2 "select * from test"
+    tell 1 "update test set value = 18 where id = 2"
+    #Still shows 1 => 11, 2 => 19. We're isolated from other transactions now that we have our snapshot.
+    tell 2 "select * from test"
+    #Rejected due to optimistic concurrency controls
+    tell 1 "commit"
+    tell 2 "commit"    
     ;;
   "pmp")
     echo "Running pmp test."
@@ -145,6 +162,46 @@ case $test in
     tell 0 "select * from test where id = 2"
     tell 0 "commit"
     ;;
+  "g-single-dependencies")
+    echo "Running g-single-dependencies test."
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 0 "select * from test where value % 5 = 0"
+    tell 1 "update test set value = 12 where value = 10"
+    tell 1 "commit"
+    #Returns nothing
+    tell 0 "select * from test where value % 3 = 0"
+    tell 0 "commit"
+    ;;
+  "g-single-write-1")
+    echo "Running g-single-write-1 test."
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 0 "select * from test where id = 1"
+    tell 1 "select * from test"
+    tell 1 "update test set value = 12 where id = 1"
+    tell 1 "update test set value = 18 where id = 2"
+    tell 1 "commit"
+    #Deletes a row
+    tell 0 "delete from test where value = 20"
+    #Returns nothing
+    tell 0 "select * from test where id = 2"
+    tell 0 "commit"
+    ;;
+  "g-single-write-2")
+    echo "Running g-single-write-2 test."
+    tell 0 "begin"
+    tell 1 "begin"
+    #Shows 1 => 10
+    tell 0 "select * from test where id = 1"
+    tell 1 "select * from test"
+    tell 1 "update test set value = 12 where id = 1"
+    tell 0 "delete from test where value = 20"
+    tell 1 "update test set value = 18 where id = 2"
+    tell 0 "rollback"
+    #Conflicts are checked at commit-time, and the other transaction has not committed, so this goes through successfully.
+    tell 1 "commit"
+    ;;
   "g2-item")
     echo "Running g2-item test."
     tell 0 "begin"
@@ -169,9 +226,28 @@ case $test in
     #Rejected due to optimistic concurrency controls
     tell 1 "commit"
     ;;
+  "g2-two-edges")
+    echo "Running g2-two-edges test."
+    tmux split-window -h -t SQL "fdbsqlcli test | tee /tmp/SQL2.out"
+    wait_for_prompts 2 0
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 2 "begin"
+    tell 0 "select * from test"
+    tell 1 "update test set value = value + 5 where id = 2"
+    #Still shows 1 => 10, 2 => 20
+    tell 2 "select * from test"
+    tell 1 "update test set value = 0 where id = 1"
+    #Successful commit
+    tell 2 "commit"
+    #Successful commit
+    tell 0 "commit"
+    tell 1 "rollback"
+    ;;
   *)
     echo "Test not recognized."
 esac
 
 tmux attach-session -t SQL
+
 ```
