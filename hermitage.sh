@@ -216,6 +216,24 @@ case $test in
     #Rejected due to optimistic concurrency controls
     tell 1 "commit"
     ;;
+  "g2-two-edges")
+    echo "Running g2-two-edges test."
+    tmux split-window -h -t SQL "fdbsqlcli test | tee /tmp/SQL2.out"
+    wait_for_prompts 2 0
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 2 "begin"
+    tell 0 "select * from test"
+    tell 1 "update test set value = value + 5 where id = 2"
+    #Still shows 1 => 10, 2 => 20
+    tell 2 "select * from test"
+    tell 1 "update test set value = 0 where id = 1"
+    #Successful commit
+    tell 2 "commit"
+    #Successful commit
+    tell 0 "commit"
+    tell 1 "rollback"
+    ;;
   *)
     echo "Test not recognized."
 esac
