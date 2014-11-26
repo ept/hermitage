@@ -152,6 +152,46 @@ case $test in
     tell 0 "select * from test where id = 2"
     tell 0 "commit"
     ;;
+  "g-single-dependencies")
+    echo "Running g-single-dependencies test."
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 0 "select * from test where value % 5 = 0"
+    tell 1 "update test set value = 12 where value = 10"
+    tell 1 "commit"
+    #Returns nothing
+    tell 0 "select * from test where value % 3 = 0"
+    tell 0 "commit"
+    ;;
+  "g-single-write-1")
+    echo "Running g-single-write-1 test."
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 0 "select * from test where id = 1"
+    tell 1 "select * from test"
+    tell 1 "update test set value = 12 where id = 1"
+    tell 1 "update test set value = 18 where id = 2"
+    tell 1 "commit"
+    #Deletes a row
+    tell 0 "delete from test where value = 20"
+    #Returns nothing
+    tell 0 "select * from test where id = 2"
+    tell 0 "commit"
+    ;;
+  "g-single-write-2")
+    echo "Running g-single-write-2 test."
+    tell 0 "begin"
+    tell 1 "begin"
+    #Shows 1 => 10
+    tell 0 "select * from test where id = 1"
+    tell 1 "select * from test"
+    tell 1 "update test set value = 12 where id = 1"
+    tell 0 "delete from test where value = 20"
+    tell 1 "update test set value = 18 where id = 2"
+    tell 0 "rollback"
+    #Conflicts are checked at commit-time, and the other transaction has not committed, so this goes through successfully.
+    tell 1 "commit"
+    ;;
   "g2-item")
     echo "Running g2-item test."
     tell 0 "begin"
