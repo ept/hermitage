@@ -135,6 +135,19 @@ case $test in
     tell 0 "select * from test where value = 30"
     tell 0 "commit"
     ;;
+  "pmp-write")
+    echo "Running pmp-write test."
+    tell 0 "begin"
+    tell 1 "begin"
+    tell 0 "update test set value = value + 10"
+    #Still shows 1 => 10, 2 => 20
+    tell 1 "select * from test"
+    tell 1 "delete from test where value = 20"
+    tell 0 "commit"
+    #Shows 1 => 10
+    tell 1 "select * from test"
+    tell 1 "commit"
+    ;;
   "p4")
     echo "Running p4 test."
     tell 0 "begin"
