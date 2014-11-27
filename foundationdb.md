@@ -222,15 +222,15 @@ case $test in
     tmux split-window -h -t SQL "fdbsqlcli test | tee /tmp/SQL2.out"
     wait_for_prompts 2 0
     tell 0 "begin"
-    tell 1 "begin"
-    tell 2 "begin"
     tell 0 "select * from test"
+    tell 1 "begin"
     tell 1 "update test set value = value + 5 where id = 2"
-    tell 2 "select * from test" # Still shows 1 => 10, 2 => 20
-    tell 1 "update test set value = 0 where id = 1"
-    tell 2 "commit" # Successful commit
-    tell 0 "commit" # Successful commit
-    tell 1 "rollback"
+    tell 1 "commit"
+    tell 2 "begin"
+    tell 2 "select * from test" # Shows 1 => 10, 2 => 25
+    tell 2 "commit" # Successful
+    tell 0 "update test set value = 0 where id = 1"
+    tell 0 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
     ;;
   *)
     echo "Test not recognized."
