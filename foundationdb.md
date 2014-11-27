@@ -7,7 +7,7 @@ Key-Value Store does not use locking to meet its isolation guarantees. Instead, 
 
 Key-Value Store enforces a 5 second limit on transactions to maintain a reasonable window of time for detecting conflicts. Because of this time constraint, testing isolation manually, like the other tests in Hermitage, is unworkable. So this test utilizes tmux to automate the Hermitage tests.
 
-````bat
+```bash
 #!/bin/bash
 
 if [ -z $1 ]
@@ -60,21 +60,18 @@ case $test in
     tell 0 "commit"
     tell 0 "select * from test"
     tell 1 "update test set value = 22 where id = 2"
-    #Rejected due to optimistic concurrency controls 
-    tell 1 "commit"
-    tell 0 "select * from test"
-    tell 1 "select * from test"
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
+    tell 0 "select * from test" # Shows 1 => 11, 2 => 21
+    tell 1 "select * from test" # Shows 1 => 11, 2 => 21
     ;;
   "g1a")
     echo "Running g1a test."
     tell 0 "begin"
     tell 1 "begin"
     tell 0 "update test set value = 101 where id = 1"
-    #Still shows 1 => 10
-    tell 1 "select * from test"
+    tell 1 "select * from test" # Still shows 1 => 10
     tell 0 "rollback"
-    #Still shows 1 => 10
-    tell 1 "select * from test"
+    tell 1 "select * from test" # Still shows 1 => 10
     tell 1 "commit"
     ;;
   "g1b")
@@ -82,12 +79,10 @@ case $test in
     tell 0 "begin"
     tell 1 "begin"
     tell 0 "update test set value = 101 where id = 1"
-    #Still shows 1 => 10
-    tell 1 "select * from test"
+    tell 1 "select * from test" # Still shows 1 => 10
     tell 0 "update test set value = 11 where id = 1"
     tell 0 "commit"
-    #Still shows 1 => 10. A new transaction must be started to see the commits of other transactions.
-    tell 1 "select * from test"
+    tell 1 "select * from test" # Still shows 1 => 10. A new transaction must be started to see the commits of other transactions.
     tell 1 "commit"
     ;;
   "g1c")
@@ -96,10 +91,8 @@ case $test in
     tell 1 "begin"
     tell 0 "update test set value = 11 where id = 1"
     tell 1 "update test set value = 22 where id = 2"
-    #Still shows 2 => 20
-    tell 0 "select * from test"
-    #Still shows 1 => 10
-    tell 1 "select * from test"
+    tell 0 "select * from test" # Still shows 2 => 20
+    tell 1 "select * from test" # Still shows 1 => 10
     tell 0 "commit"
     tell 1 "commit"
     ;;
@@ -114,25 +107,20 @@ case $test in
     tell 0 "update test set value = 19 where id = 2"
     tell 1 "update test set value = 12 where id = 1"
     tell 0 "commit"
-    #Shows 1 => 11, 2 => 19. This is because we don't get a snapshot of the db until our first read.
-    tell 2 "select * from test"
+    tell 2 "select * from test" # Shows 1 => 11, 2 => 19. This is because we don't get a snapshot of the db until our first read.
     tell 1 "update test set value = 18 where id = 2"
-    #Still shows 1 => 11, 2 => 19. We're isolated from other transactions now that we have our snapshot.
-    tell 2 "select * from test"
-    #Rejected due to optimistic concurrency controls
-    tell 1 "commit"
+    tell 2 "select * from test" # Still shows 1 => 11, 2 => 19. We're isolated from other transactions now that we have our snapshot.
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
     tell 2 "commit"    
     ;;
   "pmp")
     echo "Running pmp test."
     tell 0 "begin"
     tell 1 "begin"
-    #Returns nothing
-    tell 0 "select * from test where value = 30"
+    tell 0 "select * from test where value = 30" # Returns nothing
     tell 1 "insert into test (id, value) values(3, 30)"
     tell 1 "commit"
-    #Still returns nothing
-    tell 0 "select * from test where value = 30"
+    tell 0 "select * from test where value = 30" # Still returns nothing
     tell 0 "commit"
     ;;
   "pmp-write")
@@ -140,13 +128,12 @@ case $test in
     tell 0 "begin"
     tell 1 "begin"
     tell 0 "update test set value = value + 10"
-    #Still shows 1 => 10, 2 => 20
-    tell 1 "select * from test"
+    tell 1 "select * from test" # Still shows 1 => 10, 2 => 20
     tell 1 "delete from test where value = 20"
     tell 0 "commit"
-    #Shows 1 => 10
-    tell 1 "select * from test"
-    tell 1 "commit"
+    tell 1 "select * from test" # Shows 1 => 10
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
+    tell 0 "select * from test" # Shows 1 => 20, 2 => 30
     ;;
   "p4")
     echo "Running p4 test."
@@ -157,22 +144,19 @@ case $test in
     tell 0 "update test set value = 11 where id = 1"
     tell 1 "update test set value = 11 where id = 1"
     tell 0 "commit"
-    #Rejected due to optimistic concurrency controls 
-    tell 1 "commit"
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
     ;;
   "g-single")
     echo "Running g-single test."
     tell 0 "begin"
     tell 1 "begin"
-    #Shows 1 => 10
-    tell 0 "select * from test where id = 1"
+    tell 0 "select * from test where id = 1" # Shows 1 => 10
     tell 1 "select * from test where id = 1"
     tell 1 "select * from test where id = 2"
     tell 1 "update test set value = 12 where id = 1"
     tell 1 "update test set value = 18 where id = 2"
     tell 1 "commit"
-    #Still shows 2 => 20
-    tell 0 "select * from test where id = 2"
+    tell 0 "select * from test where id = 2" # Shows 2 => 20
     tell 0 "commit"
     ;;
   "g-single-dependencies")
@@ -182,8 +166,7 @@ case $test in
     tell 0 "select * from test where value % 5 = 0"
     tell 1 "update test set value = 12 where value = 10"
     tell 1 "commit"
-    #Returns nothing
-    tell 0 "select * from test where value % 3 = 0"
+    tell 0 "select * from test where value % 3 = 0" # Returns nothing
     tell 0 "commit"
     ;;
   "g-single-write-1")
@@ -195,25 +178,22 @@ case $test in
     tell 1 "update test set value = 12 where id = 1"
     tell 1 "update test set value = 18 where id = 2"
     tell 1 "commit"
-    #Deletes a row
-    tell 0 "delete from test where value = 20"
-    #Returns nothing
-    tell 0 "select * from test where id = 2"
-    tell 0 "commit"
+    tell 0 "delete from test where value = 20" # Deletes the row 2 => 20
+    tell 0 "select * from test where id = 2" # Returns nothing
+    tell 0 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
+    tell 1 "select * from test" # Returns 1 => 12, 2 => 18
     ;;
   "g-single-write-2")
     echo "Running g-single-write-2 test."
     tell 0 "begin"
     tell 1 "begin"
-    #Shows 1 => 10
-    tell 0 "select * from test where id = 1"
+    tell 0 "select * from test where id = 1" # Shows 1 => 10
     tell 1 "select * from test"
     tell 1 "update test set value = 12 where id = 1"
-    tell 0 "delete from test where value = 20"
+    tell 0 "delete from test where value = 20" # Deletes the row 2 => 20
     tell 1 "update test set value = 18 where id = 2"
     tell 0 "rollback"
-    #Conflicts are checked at commit-time, and the other transaction has not committed, so this goes through successfully.
-    tell 1 "commit"
+    tell 1 "commit" # Conflicts are checked at commit-time, and the other transaction has aborted, so this goes through successfully.
     ;;
   "g2-item")
     echo "Running g2-item test."
@@ -224,8 +204,7 @@ case $test in
     tell 0 "update test set value = 11 where id = 1"
     tell 1 "update test set value = 21 where id = 2"
     tell 0 "commit"
-    #Rejected due to optimistic concurrency controls
-    tell 1 "commit"
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
     ;;
   "g2")
     echo "Running g2 test."
@@ -236,8 +215,7 @@ case $test in
     tell 0 "insert into test (id, value) values(3, 30)"
     tell 1 "insert into test (id, value) values(4, 42)"
     tell 0 "commit"
-    #Rejected due to optimistic concurrency controls
-    tell 1 "commit"
+    tell 1 "commit" # Rejected with ERROR: FoundationDB commit aborted: 1020 - not_committed
     ;;
   "g2-two-edges")
     echo "Running g2-two-edges test."
@@ -248,13 +226,10 @@ case $test in
     tell 2 "begin"
     tell 0 "select * from test"
     tell 1 "update test set value = value + 5 where id = 2"
-    #Still shows 1 => 10, 2 => 20
-    tell 2 "select * from test"
+    tell 2 "select * from test" # Still shows 1 => 10, 2 => 20
     tell 1 "update test set value = 0 where id = 1"
-    #Successful commit
-    tell 2 "commit"
-    #Successful commit
-    tell 0 "commit"
+    tell 2 "commit" # Successful commit
+    tell 0 "commit" # Successful commit
     tell 1 "rollback"
     ;;
   *)
@@ -262,5 +237,4 @@ case $test in
 esac
 
 tmux attach-session -t SQL
-
 ```
