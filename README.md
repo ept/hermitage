@@ -42,6 +42,8 @@ cause application bugs. The precise definitions of these anomalies are given in 
 |               | "repeatable read"            | repeatable read        | ✓  | ✓   | ✓   | ✓   | ✓   | —   | ✓  | some     | ✓       | —    |
 |               | "snapshot"                   | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
+|               |                              |                        |    |     |     |     |     |     |    |          |         |      |
+| FDB SQL Layer | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 
 Legend:
 
@@ -116,7 +118,7 @@ it's also frustratingly vague:
 * [MySQL/InnoDB](http://dev.mysql.com/doc/refman/5.7/en/set-transaction.html)
 * [Oracle](https://docs.oracle.com/cd/B28359_01/server.111/b28318/consist.htm)
 * [SQL Server](http://msdn.microsoft.com/en-us/library/ms173763.aspx)
-
+* [FoundationDB](https://foundationdb.com/key-value-store/documentation/developer-guide.html#transactions-in-foundationdb)
 
 Goals of this project
 ---------------------
@@ -176,10 +178,10 @@ database responds. If you want to build an intuition for database concurrency, r
 through the test suite is a good exercise. For some databases, setup instructions are
 included at the bottom of the file.
 
-At the moment, this project only compares four databases, but many more databases offer
+At the moment, this project only compares five databases, but many more databases offer
 transactions. It would be especially interesting to add the new generation of distributed
 transactional databases ("NewSQL" if you like marketing-speak) to this comparison:
-FoundationDB, Aerospike, NuoDB, MemSQL, etc.
+Aerospike, NuoDB, MemSQL, etc. FoundationDB is currently included.
 
 If you would like to port the test suite to another database, or add new tests, your
 contribution would be most welcome!
