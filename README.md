@@ -186,6 +186,10 @@ Aerospike, NuoDB, MemSQL, etc. FoundationDB is currently included.
 If you would like to port the test suite to another database, or add new tests, your
 contribution would be most welcome!
  
+Thank you to contributors:
+
+* [Jennifer Rullmann](https://twitter.com/jrullmann) for porting the test suite to FoundationDB.
+
 
 License
 -------
