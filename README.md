@@ -1,6 +1,11 @@
 Hermitage: Testing transaction isolation levels
 ===============================================
 
+> “Aristotle maintained that women have fewer teeth than men; although he was twice married, it
+> never occurred to him to verify this statement by examining his wives' mouths.”
+>
+> ― Bertrand Russell, The Impact of Science on Society (1952)
+
 [Hermitage](https://github.com/ept/hermitage) is an attempt to nail down precisely what
 different database systems actually mean with their isolation levels. It's a suite of tests that
 simulates various concurrency issues — some common, some more obscure — and documents how different
