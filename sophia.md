@@ -3,15 +3,14 @@ Testing Sophia transaction isolation levels
 
 Sophia is a modern embeddable transactional key-value storage.
 
-[http://sphia.org](https://sphia.org)
-
+[http://sphia.org](http://sphia.org)
 [https://github.com/pmwkaa/sophia](https://github.com/pmwkaa/sophia)
 
-Implemented as small C-written library, Sophia has Append-Only MVCC storage designed
-for fast write and read, small to medium key-values.
+Being implemented as a small C-written library, Sophia has Append-Only MVCC engine
+designed for fast write and read, small to medium key-values.
 
-Originally Sophia got Snapshot Isolation (SI) but recently has been upgraded to own
-implementation of Serializable Snapshot Isolation (SSI).
+Originally Sophia got Snapshot Isolation (SI) (v1.2.3) but recently has been upgraded to own
+implementation of Serializable Snapshot Isolation (SSI) (v2.1.1).
 
 Key-Value store does not use locking to meet its isolation guarantees.
 Instead, the database uses optimistic concurrency control. It checks for conflicts at commit-time,
