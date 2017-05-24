@@ -119,7 +119,7 @@ The formal definitions are not easy to understand, but at least they are precise
 database vendors' documentation of isolation levels is also hard to understand, but on top of that
 it's also frustratingly vague:
 
-* [PostgreSQL](http://www.postgresql.org/docs/9.3/static/transaction-iso.html)
+* [PostgreSQL](http://www.postgresql.org/docs/current/static/transaction-iso.html)
 * [MySQL/InnoDB](http://dev.mysql.com/doc/refman/5.7/en/set-transaction.html)
 * [Oracle](https://docs.oracle.com/cd/B28359_01/server.111/b28318/consist.htm)
 * [SQL Server](http://msdn.microsoft.com/en-us/library/ms173763.aspx)
