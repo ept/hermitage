@@ -58,6 +58,17 @@ Legend:
 * R/O = isolation level prevents this anomaly in a read-only context, but when you perform writes,
   the anomaly can occur (see test cases for details)
 * some = isolation level prevents this anomaly in some cases, but not in others (see test cases for details)
+* anomalies
+  - G0: Write Cycles, Dirty Writes
+  - G1a: Aborted Reads
+  - G1b: Intermediate Reads
+  - G1c: Circular Information Flow
+  - OTV: Observed Transaction Vanishes
+  - PMP: Predicate-Many-Preceders
+  - P4: Lost Update
+  - G-single: Read Skew, Single Anti-dependency Cycles
+  - G2-item: Write Skew
+  - G2: Anti-Dependency Cycles
 
 
 Background
