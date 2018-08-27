@@ -29,21 +29,21 @@ cause application bugs. The precise definitions of these anomalies are given in 
 
 | DBMS          | So-called isolation level    | Actual isolation level | G0 | G1a | G1b | G1c | OTV | PMP | P4 | G-single | G2-item | G2   |
 |:--------------|:-----------------------------|:-----------------------|:--:|:---:|:---:|:---:|:---:|:---:|:--:|:--------:|:-------:|:----:|
-| PostgreSQL    | "read committed" ★           | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+| PostgreSQL    | "read committed" ★           | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
 |               | "repeatable read"            | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | MySQL/InnoDB  | "read uncommitted"           | read uncommitted       | ✓  | —   | —   | —   | —   | —   | —  | —        | —       | —    |
-|               | "read committed"             | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
-|               | "repeatable read" ★          | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | R/O | —  | R/O      | —       | —    |
+|               | "read committed"             | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+|               | "repeatable read" ★          | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | R/O | —  | R/O      | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
-| Oracle DB     | "read committed" ★           | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+| Oracle DB     | "read committed" ★           | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
 |               | "serializable"               | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | some |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | MS SQL Server | "read uncommitted"           | read uncommitted       | ✓  | —   | —   | —   | —   | —   | —  | —        | —       | —    |
-|               | "read committed" (locking) ★ | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
-|               | "read committed" (snapshot)  | monotonic atomic views | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+|               | "read committed" (locking) ★ | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+|               | "read committed" (snapshot)  | monotonic atomic view | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
 |               | "repeatable read"            | repeatable read        | ✓  | ✓   | ✓   | ✓   | ✓   | —   | ✓  | some     | ✓       | —    |
 |               | "snapshot"                   | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
@@ -58,6 +58,17 @@ Legend:
 * R/O = isolation level prevents this anomaly in a read-only context, but when you perform writes,
   the anomaly can occur (see test cases for details)
 * some = isolation level prevents this anomaly in some cases, but not in others (see test cases for details)
+* anomalies
+  - G0: Write Cycles, Dirty Writes
+  - G1a: Aborted Reads
+  - G1b: Intermediate Reads
+  - G1c: Circular Information Flow
+  - OTV: Observed Transaction Vanishes
+  - PMP: Predicate-Many-Preceders
+  - P4: Lost Update
+  - G-single: Read Skew, Single Anti-dependency Cycles
+  - G2-item: Write Skew
+  - G2: Anti-Dependency Cycles
 
 
 Background
@@ -119,7 +130,7 @@ The formal definitions are not easy to understand, but at least they are precise
 database vendors' documentation of isolation levels is also hard to understand, but on top of that
 it's also frustratingly vague:
 
-* [PostgreSQL](http://www.postgresql.org/docs/9.3/static/transaction-iso.html)
+* [PostgreSQL](http://www.postgresql.org/docs/current/static/transaction-iso.html)
 * [MySQL/InnoDB](http://dev.mysql.com/doc/refman/5.7/en/set-transaction.html)
 * [Oracle](https://docs.oracle.com/cd/B28359_01/server.111/b28318/consist.htm)
 * [SQL Server](http://msdn.microsoft.com/en-us/library/ms173763.aspx)
