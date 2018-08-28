@@ -67,7 +67,7 @@ Legend:
   - PMP: Predicate-Many-Preceders
   - P4: Lost Update
   - G-single: Read Skew, Single Anti-dependency Cycles
-  - G2-item: Write Skew
+  - G2-item: Write Skew, Item Anti-dependency Cycles
   - G2: Anti-Dependency Cycles
 
 
