@@ -49,6 +49,8 @@ cause application bugs. The precise definitions of these anomalies are given in 
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | FDB SQL Layer | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
+|               |                              |                        |    |     |     |     |     |     |    |          |         |      |
+| CockroachDB   | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 
 Legend:
 
@@ -211,6 +213,7 @@ contribution would be most welcome!
 Thank you to contributors:
 
 * [Jennifer Rullmann](https://twitter.com/jrullmann) for porting the test suite to FoundationDB.
+* [@dddinary](https://github.com/dddinary) for porting the test suite to CockroachDB.
 
 
 License
