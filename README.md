@@ -113,7 +113,7 @@ levels. In particular:
 * [*Readings in Database Systems*](http://redbook.cs.berkeley.edu/), edited by Joseph M.
   Hellerstein and Michael Stonebraker, 4th edition, MIT Press, 2005. ISBN: 978-0-262-69314-1
 * Atul Adya, Barbara Liskov, Patrick O’Neil:
-  "[Generalized Isolation Level Definitions](http://bnrg.cs.berkeley.edu/~adj/cs262/papers/icde00.pdf)"
+  "[Generalized Isolation Level Definitions](https://pmg.csail.mit.edu/papers/icde00.pdf)"
   Appears in the Proceedings of the IEEE International Conference on Data Engineering, San Diego, CA, March 2000
 * Atul Adya: “[Weak Consistency: A Generalized Theory and Optimistic Implementations for Distributed
   Transactions](http://pmg.csail.mit.edu/papers/adya-phd.pdf),” PhD Thesis, Massachusetts Institute of
