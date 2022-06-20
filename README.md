@@ -218,6 +218,7 @@ Thank you to contributors:
 
 * [Jennifer Rullmann](https://twitter.com/jrullmann) for porting the test suite to FoundationDB.
 * [@dddinary](https://github.com/dddinary) for porting the test suite to CockroachDB.
+* [Franck Pachot](https://github.com/FranckPachot) for porting the test suite to YugabyteDB.
 
 
 License
