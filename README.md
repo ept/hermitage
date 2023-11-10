@@ -50,7 +50,9 @@ cause application bugs. The precise definitions of these anomalies are given in 
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | FDB SQL Layer | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
-| CockroachDB   | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
+| CockroachDB   | "read committed"             | monotonic atomic view  | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
+|               | "repeatable read"            | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
+|               | "serializable" ★             | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 |               |                              |                        |    |     |     |     |     |     |    |          |         |      |
 | YugabyteDB    | "read committed" ★           | monotonic atomic view  | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
 |               | "repeatable read"            | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
