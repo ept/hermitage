@@ -3,15 +3,21 @@ Testing TiDB transaction isolation levels
 
 This file is a subset of mysql.md.
 
-These tests were run with TiDB 7.5.0. Using tiup for setting up the cluster (see http://tiup.io for installation instructions).
-Cluster was started using the the command line:  tiup playground v7.5.0 --db 2 --pd 3 --kv 3
+These tests were run with TiDB 7.5.0. Use tiup to set up the TiDB cluster.
+See http://tiup.io for installation instructions. Cluster was started using
+the the command line:
 
-TiDB only supports READ-COMMITTED and SNAPSHOT-ISOLATION isolation levels. TiDB snapshot isolation differs from the ANSI SQL REPEATABLE-READ.
+   tiup playground v7.5.0 --db 2 --pd 3 --kv 3
+
+TiDB only supports READ-COMMITTED and SNAPSHOT-ISOLATION isolation levels. TiDB
+snapshot isolation differs from the ANSI SQL REPEATABLE-READ.
 See, https://docs-archive.pingcap.com/tidb/v7.2/transaction-isolation-levels#difference-between-tidb-and-ansi-repeatable-read
 
 TiDB maps SNAPSHOT-ISOLATION to REPEATABLE-READ. See above link for differences with InnoDB REPEATABLE-READ.
 
-The above tiup command line sets up two SQL nodes "--db 2". Since TiDB is a compute and storage disaggregated distributed you use the MySQL client to coonect to different nodes too.
+The above tiup command line sets up two SQL nodes "--db 2". Since TiDB is a
+compute and storage disaggregated distributed you cn use the MySQL client
+to coonect to different nodes too.
 
 Setup (before every test case):
 
