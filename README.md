@@ -57,6 +57,12 @@ cause application bugs. The precise definitions of these anomalies are given in 
 | YugabyteDB    | "read committed" ★           | monotonic atomic view  | ✓  | ✓   | ✓   | ✓   | ✓   | —   | —  | —        | —       | —    |
 |               | "repeatable read"            | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "serializable"               | serializable           | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
+|               |                              |                        |    |     |     |     |     |     |    |          |         |      |
+| Memgraph      | "snapshot isolation" ★       | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
+|               | "read committed"             | read committed         | ✓  | ✓   | ✓   | ✓   | ✓   | —   | ✓  | —        | —       | —    |
+|               | "read uncommitted"           | read uncommitted       | ✓  | —   | —   | —   | ✓   | —   | ✓  | —        | —       | —    |
+
+
 
 Legend:
 
