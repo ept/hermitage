@@ -1,6 +1,9 @@
 Testing Memgraph's transaction isolation levels
 ===============================================
 
+
+### You can find all Memgraph tests [here](https://github.com/memgraph/memgraph/blob/master/tests/manual/test_isolation_level.py).
+
 [Memgraph](https://memgraph.com/) is a graph database which uses Cypher query language in its core. Memgraph currently supports three isolation levels, from the highest to the lowest:
 
 **SNAPSHOT_ISOLATION (default)** - guarantees that all reads made in a transaction will see a consistent snapshot of the database, 
@@ -25,8 +28,6 @@ Default SNAPSHOT ISOLATION level implicitly supports isolation levels (as specif
 Too see how to start Memgraph, please refer to our [docs](https://memgraph.com/docs/getting-started/install-memgraph). You can change the
 global isolation level using `--isolation-level` flag or you can use Cypher query language to change isolation level in various scopes (GLOBAL, SESSION, TRANSACTION).
 
-You can find all Memgraph tests [here](https://github.com/memgraph/memgraph/blob/master/tests/manual/test_isolation_level.py).
-
-Contributors:
-- [spacejam](https://github.com/spacejam)
-- [as51340](https://github.com/as51340)
+**Contributors**:
+- [**spacejam**](https://github.com/spacejam)
+- [**as51340**](https://github.com/as51340)
