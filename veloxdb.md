@@ -15,7 +15,7 @@ To run the VeloxDB Hermitage test, follow these steps:
 
     ```bash
     dotnet new nunit
-    dotnet add package veloxdb.embedded
+    dotnet add package veloxdb.embedded --version 0.4.0
     ```
 
 3. Copy the provided test code into `UnitTest1.cs` within the newly created project.
