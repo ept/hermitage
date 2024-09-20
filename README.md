@@ -61,7 +61,7 @@ cause application bugs. The precise definitions of these anomalies are given in 
 | Memgraph      | "snapshot isolation" ★       | snapshot isolation     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | —       | —    |
 |               | "read committed"             | read committed         | ✓  | ✓   | ✓   | ✓   | ✓   | —   | ✓  | —        | —       | —    |
 |               | "read uncommitted"           | read uncommitted       | ✓  | —   | —   | —   | ✓   | —   | ✓  | —        | —       | —    |
-
+| VeloxDB       | "serializable" ★            | serializable     | ✓  | ✓   | ✓   | ✓   | ✓   | ✓   | ✓  | ✓        | ✓       | ✓    |
 
 
 Legend:
