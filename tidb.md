@@ -17,7 +17,7 @@ TiDB maps SNAPSHOT-ISOLATION to REPEATABLE-READ. See above link for differences 
 
 The above tiup command line sets up two SQL nodes "--db 2". Since TiDB is a
 compute and storage disaggregated distributed you cn use the MySQL client
-to coonect to different nodes too.
+to connect to different nodes too.
 
 Setup (before every test case):
 
