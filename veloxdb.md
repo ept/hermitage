@@ -13,18 +13,18 @@ To run the VeloxDB Hermitage test, follow these steps:
 
 2. Create a new NUnit project and add the VeloxDB.Embedded NuGet package:
 
-    ```bash
-    dotnet new nunit
-    dotnet add package veloxdb.embedded --version 0.4.0
-    ```
+	```bash
+	dotnet new nunit
+	dotnet add package veloxdb.embedded --version 0.4.0
+	```
 
 3. Copy the provided test code into `UnitTest1.cs` within the newly created project.
 
 4. Run the test using the following command:
 
-    ```bash
-    dotnet test
-    ```
+	```bash
+	dotnet test
+	```
 
 This will execute the VeloxDB Hermitage test. All 14 tests should pass.
 
@@ -228,7 +228,7 @@ public class Tests
 		using VeloxDBTransaction t1 = db.BeginTransaction();
 		using VeloxDBTransaction t2 = db.BeginTransaction();
 
-    	// T1 increments the value of all objects in the database by 10
+		// T1 increments the value of all objects in the database by 10
 		foreach(VlxTest obj in t1.ObjectModel.GetAllObjects<VlxTest>())
 		{
 			obj.Value += 10;
@@ -238,16 +238,16 @@ public class Tests
 		AssertDBState(t2, [(1, 10), (2, 20)]);
 
 
-    	// T2 deletes all objects where the value is 20
+		// T2 deletes all objects where the value is 20
 		foreach(VlxTest obj in t2.ObjectModel.GetAllObjects<VlxTest>().Where(obj=>obj.Value == 20))
 		{
 			obj.Delete();
 		}
 
-    	// T1 fails to commit due to conflict with T2
+		// T1 fails to commit due to conflict with T2
 		AssertConflict(()=>t1.Commit());
 
-    	// Verify that T2 observes its own changes and no other updates
+		// Verify that T2 observes its own changes and no other updates
 		AssertDBState(t2, [(1, 10)]);
 		t2.Commit();
 
@@ -267,10 +267,10 @@ public class Tests
 		Update(t1, 1, 11);
 		Update(t2, 1, 11);
 
-    	// T1 fails to commit due to conflict with T2
+		// T1 fails to commit due to conflict with T2
 		AssertConflict(() => t1.Commit());
 
-    	// T2 successfully commits
+		// T2 successfully commits
 		t2.Commit();
 		AssertDBState(db, [(1, 11), (2, 20)]);
 	}
@@ -303,10 +303,10 @@ public class Tests
 		using VeloxDBTransaction t1 = db.BeginTransaction();
 		using VeloxDBTransaction t2 = db.BeginTransaction();
 
-    	// T1 retrieves all objects where the value is divisible by 5
+		// T1 retrieves all objects where the value is divisible by 5
 		VlxTest[] result = t1.ObjectModel.GetAllObjects<VlxTest>().Where(obj=>obj.Value % 5 == 0).ToArray();
 
-    	// T2 modifies objects where the value is 10
+		// T2 modifies objects where the value is 10
 		foreach (VlxTest obj in t2.ObjectModel.GetAllObjects<VlxTest>().Where(obj=>obj.Value == 10))
 		{
 			obj.Value = 12;
@@ -371,7 +371,7 @@ public class Tests
 		using VeloxDBTransaction t1 = db.BeginTransaction();
 		using VeloxDBTransaction t2 = db.BeginTransaction();
 
-    	// Both T1 and T2 retrieve all objects where the value is divisible by 3
+		// Both T1 and T2 retrieve all objects where the value is divisible by 3
 		t1.ObjectModel.GetAllObjects<VlxTest>().Where(obj => obj.Value % 3 == 0).ToArray();
 		t2.ObjectModel.GetAllObjects<VlxTest>().Where(obj => obj.Value % 3 == 0).ToArray();
 
