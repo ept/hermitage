@@ -22,6 +22,13 @@ with some background story.
 Summary of test results
 -----------------------
 
+This repo contains tests for PostgreSQL, MySQL with InnoDB, Oracle, SQL Server, FoundationDB,
+CockroachDB, YugabyteDB, and Memgraph. If you would like to port the test suite to another database,
+please don't add it to this repository; instead you can make your own repository and add it to the
+following list. The test suite has also been ported to:
+
+* [VeloxDB](https://github.com/VeloxDB/VeloxDB/tree/main/Tests/Hermitage)
+
 The cryptic abbreviations (G1c, PMP etc) are different kinds of concurrency *anomalies* — issues
 which can occur when multiple clients are executing transactions at the same time, and which can
 cause application bugs. The precise definitions of these anomalies are given in the literature
