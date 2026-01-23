@@ -115,7 +115,7 @@ cannot know whether your code has concurrency bugs and race conditions.
 
 The [SQL standard](http://synthesis.ipi.ac.ru/synthesis/student/oodb/essayRef/sqlFoundation.pdf) tried
 to define four isolation levels (read uncommitted, read committed, repeatable read and serializable),
-but its definition is [flawed](http://research.microsoft.com/pubs/69541/tr-95-51.pdf). Several
+but its definition is [flawed](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-95-51.pdf). Several
 researchers have tried to nail down more precise definitions of weak (i.e. non-serializable) isolation
 levels. In particular:
 
